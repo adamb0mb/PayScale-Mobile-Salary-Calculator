@@ -1,0 +1,11 @@
+//
+// PayScale Mobile Salary Calculator
+// Author: Adam Phillabaum of PayScale (adamp@payscale.com)
+// Date: 2011-01-28
+//
+This is a Salary Calculator for Windows Phone 7 (WP7).  Give it a job title and a zip code, and it'll call the PayScale web service to find the salary in that location.
+
+This is my first WP7 app.  Keep judgement to a minimum :-)
+
+--
+Adam
