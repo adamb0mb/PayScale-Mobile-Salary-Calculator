@@ -1,0 +1,23 @@
+﻿<configuration>
+    <system.serviceModel>
+        <bindings>
+            <basicHttpBinding>
+                <binding name="SimpleQuoteServiceSoap" maxBufferSize="2147483647"
+                    maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
+                <binding name="USZipSoap" maxBufferSize="2147483647" maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
+            </basicHttpBinding>
+        </bindings>
+        <client>
+            <endpoint address="http://www.payscale.com/syndication/simplequote.asmx"
+                binding="basicHttpBinding" bindingConfiguration="SimpleQuoteServiceSoap"
+                contract="SimpleQuote.SimpleQuoteServiceSoap" name="SimpleQuoteServiceSoap" />
+            <endpoint address="http://www.webservicex.net/uszip.asmx" binding="basicHttpBinding"
+                bindingConfiguration="USZipSoap" contract="ZipcodeService.USZipSoap"
+                name="USZipSoap" />
+        </client>
+    </system.serviceModel>
+</configuration>

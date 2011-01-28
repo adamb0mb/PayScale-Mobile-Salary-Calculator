@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://services.payscale.com/compensationSearch/060930" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.payscale.com/compensationSearch/060930" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://services.payscale.com/compensationSearch/060930">
+      <s:element name="GetCountries">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetCountriesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCountriesResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetStates">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="country" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatesResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SuggestJobs">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jobTitle" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SuggestJobsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SuggestJobsResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetQuote">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="jobTitle" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="city" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="state" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="country" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetQuoteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetQuoteResult" type="tns:SimpleQuoteResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SimpleQuoteResponse">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Error" type="tns:CompensationSearchError" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocationType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocationRegion" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Currency" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencySymbol" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Average" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="Median" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="Percentile25" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="Percentile75" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="Type" type="tns:CompensationType" />
+          <s:element minOccurs="0" maxOccurs="1" name="ChartUrl" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="CompensationSearchError">
+        <s:restriction base="s:string">
+          <s:enumeration value="None" />
+          <s:enumeration value="Unexpected" />
+          <s:enumeration value="AccessDenied" />
+          <s:enumeration value="JobNotFound" />
+          <s:enumeration value="JobNotPreciseEnough" />
+          <s:enumeration value="NotEnoughData" />
+          <s:enumeration value="InvalidParameter" />
+          <s:enumeration value="InvalidProfile" />
+          <s:enumeration value="InvalidProfileID" />
+          <s:enumeration value="InvalidJob" />
+          <s:enumeration value="InvalidYearsOnJob" />
+          <s:enumeration value="InvalidLocation" />
+          <s:enumeration value="InvalidCountry" />
+          <s:enumeration value="InvalidState" />
+          <s:enumeration value="InvalidCity" />
+          <s:enumeration value="InvalidCurrency" />
+          <s:enumeration value="InvalidIncome" />
+          <s:enumeration value="InvalidBaseIncome" />
+          <s:enumeration value="InvalidOvertime" />
+          <s:enumeration value="InvalidBonus" />
+          <s:enumeration value="InvalidCommissions" />
+          <s:enumeration value="InvalidExperience" />
+          <s:enumeration value="InvalidDateOfBirth" />
+          <s:enumeration value="InvalidNAICSCode" />
+          <s:enumeration value="InvalidChartType" />
+          <s:enumeration value="JobDescriptionNotFound" />
+          <s:enumeration value="TemplateNotFound" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="CompensationType">
+        <s:restriction base="s:string">
+          <s:enumeration value="None" />
+          <s:enumeration value="Salary" />
+          <s:enumeration value="Hourly" />
+          <s:enumeration value="TotalAnnualCompensation" />
+          <s:enumeration value="Monthly" />
+          <s:enumeration value="AnnualizedBasePay" />
+          <s:enumeration value="TotalCashCompensation" />
+          <s:enumeration value="Bonus" />
+          <s:enumeration value="Commission" />
+          <s:enumeration value="ProfitShare" />
+        </s:restriction>
+      </s:simpleType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetCountriesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCountries" />
+  </wsdl:message>
+  <wsdl:message name="GetCountriesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCountriesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStates" />
+  </wsdl:message>
+  <wsdl:message name="GetStatesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SuggestJobsSoapIn">
+    <wsdl:part name="parameters" element="tns:SuggestJobs" />
+  </wsdl:message>
+  <wsdl:message name="SuggestJobsSoapOut">
+    <wsdl:part name="parameters" element="tns:SuggestJobsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetQuoteSoapIn">
+    <wsdl:part name="parameters" element="tns:GetQuote" />
+  </wsdl:message>
+  <wsdl:message name="GetQuoteSoapOut">
+    <wsdl:part name="parameters" element="tns:GetQuoteResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SimpleQuoteServiceSoap">
+    <wsdl:operation name="GetCountries">
+      <wsdl:input message="tns:GetCountriesSoapIn" />
+      <wsdl:output message="tns:GetCountriesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStates">
+      <wsdl:input message="tns:GetStatesSoapIn" />
+      <wsdl:output message="tns:GetStatesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SuggestJobs">
+      <wsdl:input message="tns:SuggestJobsSoapIn" />
+      <wsdl:output message="tns:SuggestJobsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuote">
+      <wsdl:input message="tns:GetQuoteSoapIn" />
+      <wsdl:output message="tns:GetQuoteSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SimpleQuoteServiceSoap" type="tns:SimpleQuoteServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetCountries">
+      <soap:operation soapAction="http://services.payscale.com/compensationSearch/060930/GetCountries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStates">
+      <soap:operation soapAction="http://services.payscale.com/compensationSearch/060930/GetStates" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SuggestJobs">
+      <soap:operation soapAction="http://services.payscale.com/compensationSearch/060930/SuggestJobs" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetQuote">
+      <soap:operation soapAction="http://services.payscale.com/compensationSearch/060930/GetQuote" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SimpleQuoteServiceSoap12" type="tns:SimpleQuoteServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetCountries">
+      <soap12:operation soapAction="http://services.payscale.com/compensationSearch/060930/GetCountries" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStates">
+      <soap12:operation soapAction="http://services.payscale.com/compensationSearch/060930/GetStates" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SuggestJobs">
+      <soap12:operation soapAction="http://services.payscale.com/compensationSearch/060930/SuggestJobs" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetQuote">
+      <soap12:operation soapAction="http://services.payscale.com/compensationSearch/060930/GetQuote" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SimpleQuoteService">
+    <wsdl:port name="SimpleQuoteServiceSoap" binding="tns:SimpleQuoteServiceSoap">
+      <soap:address location="http://www.payscale.com/syndication/simplequote.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SimpleQuoteServiceSoap12" binding="tns:SimpleQuoteServiceSoap12">
+      <soap12:address location="http://www.payscale.com/syndication/simplequote.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="http://www.payscale.com/syndication/simplequote.asmx?wsdl" docRef="http://www.payscale.com/syndication/simplequote.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="http://www.payscale.com/syndication/simplequote.asmx" xmlns:q1="http://services.payscale.com/compensationSearch/060930" binding="q1:SimpleQuoteServiceSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="http://www.payscale.com/syndication/simplequote.asmx" xmlns:q2="http://services.payscale.com/compensationSearch/060930" binding="q2:SimpleQuoteServiceSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>
