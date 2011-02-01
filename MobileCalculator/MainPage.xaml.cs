@@ -13,6 +13,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Tasks;
+using System.Threading;
 
 namespace MobileCalculator
 {
@@ -22,7 +24,6 @@ namespace MobileCalculator
         private string m_city;
         private string m_state;
         private string m_country;
-
         // Constructor
         public MainPage()
         {
@@ -32,6 +33,9 @@ namespace MobileCalculator
         //
         // For when the user hits the search button
         //
+        AutoResetEvent m_suggestedJobsWait = new AutoResetEvent(false);
+        AutoResetEvent m_zipCodeLookupWait = new AutoResetEvent(false);
+        Timer m_timer;
         private void Search_Click(object sender, RoutedEventArgs e)
         {
             // check the input
@@ -42,7 +46,8 @@ namespace MobileCalculator
 
             // hide the input fields and the search button... to make more room for the suggest jobs results
             InputPanel.Visibility = System.Windows.Visibility.Collapsed;
-            
+            ContactInfo.Visibility = System.Windows.Visibility.Collapsed;
+
             // calling to get a listing of job suggestions
             SimpleQuote.SimpleQuoteServiceSoapClient client = new SimpleQuote.SimpleQuoteServiceSoapClient();
             client.SuggestJobsCompleted += new EventHandler<SimpleQuote.SuggestJobsCompletedEventArgs>(getSuggestedJobsCallback);
@@ -54,6 +59,14 @@ namespace MobileCalculator
             ZipcodeService.USZipSoapClient zipclient = new ZipcodeService.USZipSoapClient();
             zipclient.GetInfoByZIPCompleted += new EventHandler<ZipcodeService.GetInfoByZIPCompletedEventArgs>(getZipcodeCallback);
             zipclient.GetInfoByZIPAsync(ZipCode.Text);
+
+            ShowLoadingScreen();
+        }
+
+        void ShowLoadingScreen()
+        {
+            InputPanel.Visibility = System.Windows.Visibility.Collapsed;
+            SuggestJobList.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         //
@@ -66,18 +79,42 @@ namespace MobileCalculator
             m_city = Regex.Match(e.Result.ToString(), "<CITY>(.+?)</CITY>").Groups[1].Value;
             m_state = Regex.Match(e.Result.ToString(), "<STATE>(.+?)</STATE>").Groups[1].Value;
             m_country = "United States";
+            m_zipCodeLookupWait.Set();
         }
 
         //
         // async callback for getting the user's search
-        // This builds the list of possible jobs for the user to enter
         //
+        string[] m_suggestedJobs;
         private void getSuggestedJobsCallback(object sender, SimpleQuote.SuggestJobsCompletedEventArgs e)
         {
             if (e.Result.Count > 0)
-                SuggestJobList.Visibility = System.Windows.Visibility.Visible;
+            {
+                m_suggestedJobs = e.Result.ToArray();
+            }
 
-            foreach (String jobTitle in e.Result)
+            m_suggestedJobsWait.Set();
+            ShowSuggestedJobsData();
+        }
+
+        //
+        // This builds the list of possible jobs for the user to enter
+        //
+        void ShowSuggestedJobsData()
+        {
+            LoadingPanel.Visibility = System.Windows.Visibility.Collapsed;
+            SuggestJobList.Visibility = System.Windows.Visibility.Visible;
+
+            if (m_suggestedJobs == null || m_suggestedJobs.Length < 1) // error
+            {
+                TextBlock webserviceerror = new TextBlock();
+                webserviceerror.TextWrapping = TextWrapping.Wrap;
+                webserviceerror.Text = "There was an error retreiving the data from the web service";
+                SuggestJobList.Children.Insert(SuggestJobList.Children.Count, webserviceerror);
+                return;
+            }
+
+            foreach (String jobTitle in m_suggestedJobs)
             {
                 Button button = new Button();
                 button.Name = jobTitle;
@@ -85,7 +122,6 @@ namespace MobileCalculator
                 button.Height = 100;
                 button.Click += new RoutedEventHandler(suggestedJob_Click);
                 SuggestJobList.Children.Insert(SuggestJobList.Children.Count, button);
-                
             }
         }
 
@@ -94,21 +130,24 @@ namespace MobileCalculator
         //
         void suggestedJob_Click(object sender, RoutedEventArgs e)
         {
-            // POTENTIAL BUG: I'm never actually checking to see if the location webservice returns,
-            //                I'm just assuming it too longer for the user to interact w/ the menu
-            //                than it did for the location web service to respond.
             m_selectedJob = ((Button)e.OriginalSource).Content.ToString();
+
             SimpleQuote.SimpleQuoteServiceSoapClient client = new SimpleQuote.SimpleQuoteServiceSoapClient();
             client.GetQuoteCompleted += new EventHandler<SimpleQuote.GetQuoteCompletedEventArgs>(client_GetQuoteCompleted);
+            m_zipCodeLookupWait.WaitOne(); // wait for the location data
             client.GetQuoteAsync(m_selectedJob, m_city, m_state, m_country);
+
+            SuggestJobList.Visibility = System.Windows.Visibility.Collapsed;
+            LoadingPanel.Visibility = System.Windows.Visibility.Visible;
         }
+
 
         //
         //  Async callback from when we get a response from the quote
         //
         void client_GetQuoteCompleted(object sender, SimpleQuote.GetQuoteCompletedEventArgs e)
         {
-            SuggestJobList.Visibility = System.Windows.Visibility.Collapsed;
+            LoadingPanel.Visibility = System.Windows.Visibility.Collapsed;
             ResultsPanel.Visibility = System.Windows.Visibility.Visible;
             
             // HACK: Silverlight ONLY SUPPORTS JPEG images.  The PayScale webservice only returns PNGs.  I found this little script
@@ -148,9 +187,20 @@ namespace MobileCalculator
             ResultsPanel.Visibility = System.Windows.Visibility.Collapsed;
             InputPanel.Visibility = System.Windows.Visibility.Visible;
             SuggestJobList.Children.Clear();
+            TextBlock suggestText = new TextBlock();
+            suggestText.Text = "Select a Job";
+            SuggestJobList.Children.Add(suggestText);
             m_city = String.Empty;
             m_state = String.Empty;
             m_selectedJob = String.Empty;
+        }
+
+        private void MoreDetailsBtn_Click(object sender, RoutedEventArgs e)
+        {
+            WebBrowserTask wbt = new WebBrowserTask();
+            wbt.URL = String.Format("http://www.payscale.com/wizards/choose.aspx?tk=wp7&job={0}&city={1}&state={2}&country={3}", m_selectedJob, m_city, m_state, m_country);
+            wbt.URL = wbt.URL.Replace(" ", "+");
+            wbt.Show();
         }
     }
 }

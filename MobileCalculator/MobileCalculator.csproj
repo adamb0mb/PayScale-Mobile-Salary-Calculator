@@ -119,6 +119,7 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Resource Include="payscale.jpg" />
     <Content Include="ServiceReferences.ClientConfig" />
     <None Include="Service References\SimpleQuote\simplequote.wsdl" />
     <None Include="Service References\ZipcodeService\uszip.wsdl" />
